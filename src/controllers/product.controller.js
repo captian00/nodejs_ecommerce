@@ -17,6 +17,7 @@ class ProductController {
 
   //stategy
   createProduct = async (req, res, next) => {
+    console.log("vao create...");
     new SuccessRespone({
       // stategy
       message: "Create product success",
@@ -63,6 +64,29 @@ class ProductController {
       message: "getAllPublishedForShop success",
       metadata: await ProductServiceV2.findAllPublishedForShop({
         product_shop: req.user.userId,
+      }),
+    }).send(res);
+  };
+
+  getListSearchProduct = async (req, res, next) => {
+    new SuccessRespone({
+      message: "getListSearchProduct success",
+      metadata: await ProductServiceV2.searchProduct(req.params),
+    }).send(res);
+  };
+
+  findAllProducts = async (req, res, next) => {
+    new SuccessRespone({
+      message: "findAllProducts success",
+      metadata: await ProductServiceV2.findAllProducts(req.query),
+    }).send(res);
+  };
+
+  findProduct = async (req, res, next) => {
+    new SuccessRespone({
+      message: "findProduct success",
+      metadata: await ProductServiceV2.findProduct({
+        product_id: req.params.product_id,
       }),
     }).send(res);
   };
