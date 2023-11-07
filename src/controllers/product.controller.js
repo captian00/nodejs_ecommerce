@@ -17,7 +17,6 @@ class ProductController {
 
   //stategy
   createProduct = async (req, res, next) => {
-    console.log("vao create...");
     new SuccessRespone({
       // stategy
       message: "Create product success",
@@ -25,6 +24,22 @@ class ProductController {
         ...req.body,
         product_shop: req.user.userId,
       }),
+    }).send(res);
+  };
+
+  //update product
+  updateProduct = async (req, res, next) => {
+    new SuccessRespone({
+      // stategy
+      message: "Update product success",
+      metadata: await ProductServiceV2.updateProduct(
+        req.body.product_type,
+        req.params.productId,
+        {
+          ...req.body,
+          product_shop: req.user.userId,
+        }
+      ),
     }).send(res);
   };
 
