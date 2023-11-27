@@ -97,13 +97,26 @@ const updateProductById = async ({
   model,
   isNew = true,
 }) => {
-  console.log("model: ", { model, bodyUpdate });
-
   return await model.findByIdAndUpdate(productId, bodyUpdate, { isNew });
 };
 
-const getProductById = async ({ productId }) => {
+const getProductById = async (productId) => {
   return product.findOne({ _id: convertToObjectIdMongodb(productId) }).lean();
+};
+
+const checkProductByServer = async (products) => {
+  return await Promise.all(
+    products.map(async (product) => {
+      const foundProduct = await getProductById(product.productId);
+      if (foundProduct) {
+        return {
+          price: foundProduct.product_price,
+          quantity: product.quantity,
+          productId: product.productId,
+        };
+      }
+    })
+  );
 };
 
 module.exports = {
@@ -116,4 +129,5 @@ module.exports = {
   findProduct,
   updateProductById,
   getProductById,
+  checkProductByServer,
 };

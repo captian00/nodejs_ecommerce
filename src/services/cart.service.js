@@ -35,6 +35,25 @@ class CartService {
         },
       },
       option = { upsert: true, new: true };
+
+    //start them
+    const userCart = await cart.findOne({ cart_userId: userId });
+    const listProductInCart = userCart.cart_products;
+    console.log({ listProductInCart });
+    const findProductInCart = listProductInCart.find(
+      (product) => product.productId.toString() === productId.toString()
+    );
+
+    if (!findProductInCart) {
+      const newListProduct = [...listProductInCart, product];
+      return await cart.findOneAndUpdate(
+        { cart_userId: userId, cart_state: "active" },
+        {
+          cart_products: newListProduct,
+        }
+      );
+    }
+    //end them
     return await cart.findOneAndUpdate(query, updateSet, option);
   }
 
@@ -65,7 +84,9 @@ class CartService {
     const { productId, quantity, old_quantity } =
       shop_order_ids[0]?.item_products[0];
     const foundProduct = await getProductById({ productId });
+
     if (!foundProduct) throw new NotFoundError("Product not exist");
+
     if (foundProduct.product_shop.toString() !== shop_order_ids[0]?.shopId)
       throw new NotFoundError("Product not belong to Shop");
 

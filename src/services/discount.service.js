@@ -190,16 +190,16 @@ class DiscountService {
 
     // check xem co set gia tri toi thieu ko
     let totalOrder = 0;
-    if (discount_min_order > 0) {
-      totalOrder = products.reduce((acc, product) => {
-        return acc + product.quantity * product.price;
-      }, 0);
-      if (totalOrder < discount_min_order) {
-        throw new NotFoundError(
-          `Discount require a minium order value of ${discount_min_order}`
-        );
-      }
+    // if (discount_min_order > 0) {
+    totalOrder = products.reduce((acc, product) => {
+      return acc + product.quantity * product.price;
+    }, 0);
+    if (totalOrder < discount_min_order) {
+      throw new NotFoundError(
+        `Discount require a minium order value of ${discount_min_order}`
+      );
     }
+    // }
 
     if (discount_max_uses_per_user > 0) {
       const userUsesDiscount = discount_users_used.find(
@@ -215,7 +215,6 @@ class DiscountService {
       discount_type === "fixed_amount"
         ? discount_value
         : totalOrder * (discount_value / 100);
-
     return {
       totalOrder,
       discount: amount,
