@@ -11,6 +11,7 @@ const {
 
 const { getDiscountAmount } = require("../services/discount.service");
 const { acquireLock, releaseLock } = require("./redis.service");
+const { order } = require("../models/order.model");
 
 class CheckoutService {
   static async checkoutReview({ cartId, userId, shop_order_ids }) {
@@ -111,10 +112,31 @@ class CheckoutService {
       );
     }
 
-    const newOrder = await order.create();
+    const newOrder = order.create({
+      order_userId: userId,
+      order_checkout: checkout_order,
+      order_shipping: user_address,
+      order_payment: user_payment,
+      order_products: shop_order_ids_new,
+    });
+    // neu insert thanh cong ==> remove product in cart
+    if (newOrder) {
+    }
 
     return newOrder;
   }
+
+  // Query order by user
+  static async getOrdersByUser() {}
+
+  // Query order by user use ID
+  static async getOneOrderByUser() {}
+
+  // Update order status ( admin | shop)
+  static async updateOrderByStatusByShop() {}
+
+  // Cancel order
+  static async cancelOrderByUser() {}
 }
 
 module.exports = CheckoutService;
